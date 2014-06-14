@@ -2,18 +2,26 @@ package in.dangerbear.crafting;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Collections;
 
+/*
+ * Resources:
+ * http://en.wikipedia.org/wiki/Nearest_neighbor_search
+ * http://programmers.stackexchange.com/questions/129892/find-all-points-within-a-certain-distance-of-each-other
+ * http://en.wikipedia.org/wiki/Quickselect
+ * 
+ */
 public class GraphTester{
 	long startTime;
 	long stopTime;
 	long elapsedTime;
 	int[] closeness;
 	
-	public GraphTester(ArrayList<Point> field1){
+	public GraphTester(ArrayList<Point> pointField){
 		startTime = 0;
 		stopTime = 0;
 		elapsedTime = 0;
-		closeness = new int[field1.size()];
+		closeness = new int[pointField.size()];
 	}
 
 	/**
@@ -45,13 +53,71 @@ public class GraphTester{
 		results();
 	}
 	
-	public void sortedBruteForce(ArrayList<Point> field1, ArrayList<Point> field2, int distance){
+	public void sortedBruteForce(ArrayList<Point> field1, ArrayList<Point> input2, int distance){
+		ArrayList<Point> field2 = new ArrayList<Point>();
 		
+		deepCopy(field2, input2);
+		
+		startTimer("Starting :: Sorted 'Smart' Brute Force.\n");
+		Collections.sort(field2, new ComparePoints());
+		
+		double distanceSq = distance * distance;
+		for(int i = 0; i < field1.size(); ++i){
+			closeness[i] = 0;
+			Point source = field1.get(i);
+			for(int j = 0; j < field2.size(); ++j){
+				Point destination = field2.get(j);
+				
+				//Skip the dest point if it's too far to the left.
+				if(destination.getX() < source.getX() - distance){
+					continue;
+				}
+				
+				//Don't bother checking the next dest points if they're
+				//too far to the right.
+				if(destination.getX() > source.getX() + distance){
+					break;
+				}
+				
+				if(source.distanceSq(destination) <= distanceSq){
+					++closeness[i];
+				}
+			}
+		}
+		
+		endTimer("Stopping :: Sorted 'Smart' Brute Force. ");
+		
+		field2.clear();
+		results();
 	}
 
-	public void quickSelect(ArrayList<Point> field1, ArrayList<Point> field2,
-			int distance){
-		// TODO Auto-generated method stub
+	public void quickSelect(ArrayList<Point> field1, ArrayList<Point> input2, int distance){
+		ArrayList<Point> field2 = new ArrayList<Point>();
+		
+		deepCopy(field2, input2);
+		
+		startTimer("Starting :: Quickselect.\n");
+		Collections.sort(field2, new ComparePoints());
+		
+		double distanceSq = distance * distance;
+		for(int i = 0; i < field1.size(); ++i){
+			closeness[i] = 0;
+			Point source = field1.get(i);
+			for(int j = 0; j < field2.size(); ++j){
+				Point destination = field2.get(j);
+				
+				//TODO: the inner loop should be a while loop after finding the max closest thing.
+				
+				if(source.distanceSq(destination) <= distanceSq){
+					++closeness[i];
+				}
+			}
+		}
+		
+		endTimer("Stopping :: Quickselect. ");
+		
+		field2.clear();
+		results();
 		
 	}
 
@@ -69,7 +135,7 @@ public class GraphTester{
 	private void endTimer(String message){
 		stopTime = System.currentTimeMillis();
 		elapsedTime = stopTime - startTime;
-		pr(message + "Time (ms): " + elapsedTime + "\n");
+		pr(message + "Time (ms): " + elapsedTime + "\n\n");
 	}
 
 	private void results(){
@@ -77,6 +143,12 @@ public class GraphTester{
 			pr(closeness[i] + ", ");
 		}
 		pr("\n");
+	}
+
+	private void deepCopy(ArrayList<Point> field1, ArrayList<Point> input1){
+		for(int i = 0; i < input1.size(); ++i){
+			field1.add(input1.get(i).getLocation());
+		}
 	}
 	
 	private void pr(String string){

@@ -13,11 +13,15 @@ public class Run{
 		ArrayList<Point> field1 = generator.makeGraph(points);
 		ArrayList<Point> field2 = generator.makeGraph(points);
 		
-		GraphTester tester = new GraphTester();
-		int maxDistance = 100;
+		GraphTester tester = new GraphTester(field1);
+		int maxDistance = 10;
 		
 		for(int i = 0; i < 10; ++i){
 			tester.bruteForce(field1, field2, maxDistance);
+		}
+		
+		for(int i = 0; i < 10; ++i){
+			tester.sortedBruteForce(field1, field2, maxDistance);
 		}
 		
 		for(int i = 0; i < 10; ++i){
