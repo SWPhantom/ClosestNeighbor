@@ -103,15 +103,29 @@ public class GraphTester{
 		for(int i = 0; i < field1.size(); ++i){
 			closeness[i] = 0;
 			Point source = field1.get(i);
-			for(int j = 0; j < field2.size(); ++j){
-				Point destination = field2.get(j);
-				
-				//TODO: the inner loop should be a while loop after finding the max closest thing.
-				
-				if(source.distanceSq(destination) <= distanceSq){
-					++closeness[i];
+			
+			int max = field2.size();
+			int min = 0;
+			int select = max / 2;
+			boolean done = false;
+			
+			while(!done){
+				Point destination = field2.get(select);
+				if(destination.getX() < source.getX() - distance){
+					min = select;
+					select = (max + min)/2;
+				}else if(destination.getX() > source.getX() + distance){
+					max = select;
+					select = (max + min)/2;
+				}else{
+					done = true;
 				}
 			}
+			
+			//Some node found.
+			//Scan to its left until out of bounds.
+			
+			//Scan to its right until out of bounds.
 		}
 		
 		endTimer("Stopping :: Quickselect. ");
@@ -140,7 +154,7 @@ public class GraphTester{
 
 	private void results(){
 		for(int i = 0; i< closeness.length; ++i){
-			pr(closeness[i] + ", ");
+			//pr(closeness[i] + ", ");
 		}
 		pr("\n");
 	}
