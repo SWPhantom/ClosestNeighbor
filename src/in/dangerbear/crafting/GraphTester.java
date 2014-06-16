@@ -104,28 +104,26 @@ public class GraphTester{
 			closeness[i] = 0;
 			Point source = field1.get(i);
 			
-			int max = field2.size();
-			int min = 0;
-			int select = max / 2;
-			boolean done = false;
+			int select = quickfind(source, field2, distance);
 			
-			while(!done){
-				Point destination = field2.get(select);
-				if(destination.getX() < source.getX() - distance){
-					min = select;
-					select = (max + min)/2;
-				}else if(destination.getX() > source.getX() + distance){
-					max = select;
-					select = (max + min)/2;
-				}else{
-					done = true;
-				}
-			}
-			
-			//Some node found.
 			//Scan to its left until out of bounds.
-			
+			int scanner = select;
+			while(scanner >= 0 && field2.get(scanner).getX() >= source.getX() - distance){
+				Point destination = field2.get(scanner);
+				if(source.distanceSq(destination) <= distanceSq){
+					++closeness[i];
+				}
+				--scanner;
+			}
 			//Scan to its right until out of bounds.
+			scanner = select + 1;
+			while(scanner < field2.size() && field2.get(scanner).getX() <= source.getX() + distance){
+				Point destination = field2.get(scanner);
+				if(source.distanceSq(destination) <= distanceSq){
+					++closeness[i];
+				}
+				++scanner;
+			}
 		}
 		
 		endTimer("Stopping :: Quickselect. ");
@@ -133,6 +131,27 @@ public class GraphTester{
 		field2.clear();
 		results();
 		
+	}
+
+	private int quickfind(Point source, ArrayList<Point> field2, int distance){
+		int max = field2.size();
+		int min = 0;
+		int select = max / 2;
+		boolean done = false;
+		while(!done){
+			Point destination = field2.get(select);
+			if(destination.getX() < source.getX() - distance){
+				min = select;
+				select = (max + min)/2;
+			}else if(destination.getX() > source.getX() + distance){
+				max = select;
+				select = (max + min)/2;
+			}else{
+				done = true;
+			}
+		}
+		
+		return select;
 	}
 
 	public void spaceDivide(ArrayList<Point> field1, ArrayList<Point> field2,
@@ -154,7 +173,7 @@ public class GraphTester{
 
 	private void results(){
 		for(int i = 0; i< closeness.length; ++i){
-			//pr(closeness[i] + ", ");
+			pr(closeness[i] + ", ");
 		}
 		pr("\n");
 	}

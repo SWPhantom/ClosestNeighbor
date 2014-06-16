@@ -25,7 +25,7 @@ public class Run{
 		}
 		
 		for(int i = 0; i < 10; ++i){
-			//tester.quickSelect(field1, field2, maxDistance);
+			tester.quickSelect(field1, field2, maxDistance);
 		}
 		
 		for(int i = 0; i < 10; ++i){
