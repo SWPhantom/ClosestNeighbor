@@ -14,7 +14,7 @@ public class Run{
 		ArrayList<Point> field2 = generator.makeGraph(points);
 		
 		GraphTester tester = new GraphTester(field1);
-		int maxDistance = 100;
+		int maxDistance = 300;
 		
 		for(int i = 0; i < 10; ++i){
 			tester.bruteForce(field1, field2, maxDistance);

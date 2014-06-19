@@ -173,7 +173,7 @@ public class GraphTester{
 
 	private void results(){
 		for(int i = 0; i< closeness.length; ++i){
-			pr(closeness[i] + ", ");
+			//pr(closeness[i] + ", ");
 		}
 		pr("\n");
 	}

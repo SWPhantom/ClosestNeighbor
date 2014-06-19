@@ -15,11 +15,18 @@ public class GraphGen{
 		rand = new Random(seed);
 	}
 
+	/**
+	 * function makeGraph
+	 * 
+	 * Creates a specified number of 
+	 * @param points
+	 * @return
+	 */
 	public ArrayList<Point> makeGraph(int points){
 		ArrayList<Point> output = new ArrayList<Point>();
 		for(int i = 0; i < points; ++i){
-			int x = Math.abs(rand.nextInt(1000)); // TODO these can be changed.
-			int y = Math.abs(rand.nextInt(1000));
+			int x = rand.nextInt(1000); // TODO these can be changed.
+			int y = rand.nextInt(1000);
 			output.add(new Point(x, y));
 		}
 		return output;
