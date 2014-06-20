@@ -6,30 +6,24 @@ import java.util.ArrayList;
 public class Run{
 
 	public static void main(String[] args){
-		int seed = 20;
+		int seed = 30;
 		GraphGen generator = new GraphGen(seed);
 		
-		int points = 10000;
-		ArrayList<Point> field1 = generator.makeGraph(points);
-		ArrayList<Point> field2 = generator.makeGraph(points);
+		int points = 50000;
+		ArrayList<Point> field1;
+		ArrayList<Point> field2;
 		
-		GraphTester tester = new GraphTester(field1);
-		int maxDistance = 300;
+		GraphTester tester = new GraphTester(points);
+		int maxDistance = 10;
 		
 		for(int i = 0; i < 10; ++i){
+			field1 = generator.makeGraph(points);
+			field2 = generator.makeGraph(points);
 			tester.bruteForce(field1, field2, maxDistance);
-		}
-		
-		for(int i = 0; i < 10; ++i){
 			tester.sortedBruteForce(field1, field2, maxDistance);
-		}
-		
-		for(int i = 0; i < 10; ++i){
 			tester.quickSelect(field1, field2, maxDistance);
-		}
-		
-		for(int i = 0; i < 10; ++i){
 			tester.spaceDivide(field1, field2, maxDistance);
+			System.out.println();
 		}
 	}
 

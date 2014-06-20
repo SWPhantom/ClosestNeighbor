@@ -17,11 +17,11 @@ public class GraphTester{
 	long elapsedTime;
 	int[] closeness;
 	
-	public GraphTester(ArrayList<Point> pointField){
+	public GraphTester(int points){
 		startTime = 0;
 		stopTime = 0;
 		elapsedTime = 0;
-		closeness = new int[pointField.size()];
+		closeness = new int[points];
 	}
 
 	/**
@@ -53,18 +53,16 @@ public class GraphTester{
 		results();
 	}
 	
-	public void sortedBruteForce(ArrayList<Point> field1, ArrayList<Point> input2, int distance){
-		ArrayList<Point> field2 = new ArrayList<Point>();
-		
-		deepCopy(field2, input2);
-		
+	public void sortedBruteForce(ArrayList<Point> field1, ArrayList<Point> field2, int distance){
 		startTimer("Starting :: Sorted 'Smart' Brute Force.\n");
-		Collections.sort(field2, new ComparePoints());
 		
+		Collections.sort(field2, new ComparePoints());
 		double distanceSq = distance * distance;
+		
 		for(int i = 0; i < field1.size(); ++i){
 			closeness[i] = 0;
 			Point source = field1.get(i);
+			
 			for(int j = 0; j < field2.size(); ++j){
 				Point destination = field2.get(j);
 				
@@ -86,20 +84,15 @@ public class GraphTester{
 		}
 		
 		endTimer("Stopping :: Sorted 'Smart' Brute Force. ");
-		
-		field2.clear();
 		results();
 	}
 
-	public void quickSelect(ArrayList<Point> field1, ArrayList<Point> input2, int distance){
-		ArrayList<Point> field2 = new ArrayList<Point>();
-		
-		deepCopy(field2, input2);
-		
+	public void quickSelect(ArrayList<Point> field1, ArrayList<Point> field2, int distance){
 		startTimer("Starting :: Quickselect.\n");
-		Collections.sort(field2, new ComparePoints());
 		
+		Collections.sort(field2, new ComparePoints());
 		double distanceSq = distance * distance;
+		
 		for(int i = 0; i < field1.size(); ++i){
 			closeness[i] = 0;
 			Point source = field1.get(i);
@@ -115,6 +108,7 @@ public class GraphTester{
 				}
 				--scanner;
 			}
+			
 			//Scan to its right until out of bounds.
 			scanner = select + 1;
 			while(scanner < field2.size() && field2.get(scanner).getX() <= source.getX() + distance){
@@ -127,10 +121,7 @@ public class GraphTester{
 		}
 		
 		endTimer("Stopping :: Quickselect. ");
-		
-		field2.clear();
 		results();
-		
 	}
 
 	private int quickfind(Point source, ArrayList<Point> field2, int distance){
@@ -138,17 +129,18 @@ public class GraphTester{
 		int min = 0;
 		int select = max / 2;
 		boolean done = false;
+		
 		while(!done){
 			Point destination = field2.get(select);
 			if(destination.getX() < source.getX() - distance){
 				min = select;
-				select = (max + min)/2;
 			}else if(destination.getX() > source.getX() + distance){
 				max = select;
-				select = (max + min)/2;
 			}else{
 				done = true;
 			}
+
+			select = (max + min)/2;
 		}
 		
 		return select;
@@ -161,27 +153,21 @@ public class GraphTester{
 	}
 	
 	private void startTimer(String message){
-		pr(message);
+		//pr(message);
 		startTime = System.currentTimeMillis();
 	}
 
 	private void endTimer(String message){
 		stopTime = System.currentTimeMillis();
 		elapsedTime = stopTime - startTime;
-		pr(message + "Time (ms): " + elapsedTime + "\n\n");
+		pr(message + "Time (ms): " + elapsedTime + "\n");
 	}
 
 	private void results(){
 		for(int i = 0; i< closeness.length; ++i){
 			//pr(closeness[i] + ", ");
 		}
-		pr("\n");
-	}
-
-	private void deepCopy(ArrayList<Point> field1, ArrayList<Point> input1){
-		for(int i = 0; i < input1.size(); ++i){
-			field1.add(input1.get(i).getLocation());
-		}
+		//pr("\n");
 	}
 	
 	private void pr(String string){
